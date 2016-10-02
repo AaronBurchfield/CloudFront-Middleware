@@ -55,6 +55,7 @@ def generate_cloudfront_url(url):
 
 def process_request_options(options):
     """Return a signed request for CloudFront resources."""
-    if '.cloudfront.net' in options['url']:
+    domain_name = read_preference('domain_name', BUNDLE) or 'cloudfront.net'
+    if domain_name in options['url']:
         options['url'] = generate_cloudfront_url(options['url'])
     return options
