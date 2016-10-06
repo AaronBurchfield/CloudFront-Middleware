@@ -19,14 +19,19 @@ CloudFront key pairs are available from the AWS [Security Credentials][2] dashbo
     sudo defaults write com.github.aaronburchfield.cloudfront access_id -string "YOURACCESSKEYID"
     sudo defaults write com.github.aaronburchfield.cloudfront expire_after -int 30
     ```
-4. Install a trusted signer's CloudFront private key and set strict permissions.
+4. If you are using an [Alternate Domain Name][6], set the preference for your domain name.
+
+    ```
+    sudo defaults write com.github.aaronburchfield.cloudfront domain_name -string "munki.megacorp.com"
+    ```
+5. Install a trusted signer's CloudFront private key and set strict permissions.
 
     ```
     sudo cp pk-YOURACCESSKEYID.pem /usr/local/munki/munkiaccess.pem
     sudo chown root:wheel /usr/local/munki/munkiaccess.pem
     sudo chmod 400 /usr/local/munki/munkiaccess.pem
     ```
-5. Run munki and verify that signed CloudFront requests are being made.
+6. Run munki and verify that signed CloudFront requests are being made.
 
     ```
     sudo managedsoftwareupdate --checkonly -vvv
@@ -38,3 +43,4 @@ CloudFront key pairs are available from the AWS [Security Credentials][2] dashbo
 [3]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html
 [4]: https://aws.amazon.com/s3/
 [5]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
+[6]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html
