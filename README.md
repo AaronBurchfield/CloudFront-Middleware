@@ -37,6 +37,14 @@ CloudFront key pairs are available from the AWS [Security Credentials][2] dashbo
     sudo managedsoftwareupdate --checkonly -vvv
     ```
 
+
+#### Build a luggage package to install CloudFront Middleware
+The included [luggage][7] makefile can be used to create an installer package for CloudFront Middleware.
+1. With an AWS Root account generate a CloudFront Key Pair, saving the private key as ```munkiaccess.pem``` in the root of this repo.
+2. Replace the Access Key ID on line 4 of the **postinstall** script with the ID of your CloudFront Key Pair.
+3. ```make pkg``` and install.
+4. Set your ```SoftwareRepoURL``` to your CloudFront Distribution address and run munki.
+
 [0]: https://github.com/munki/munki
 [1]: https://aws.amazon.com/cloudfront/
 [2]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html#private-content-creating-cloudfront-key-pairs
@@ -44,3 +52,4 @@ CloudFront key pairs are available from the AWS [Security Credentials][2] dashbo
 [4]: https://aws.amazon.com/s3/
 [5]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-restricting-access-to-s3.html
 [6]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html
+[7]:https://github.com/unixorn/luggage

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# CloudFront Access Key ID
+/usr/bin/defaults write com.github.aaronburchfield.cloudfront access_id -string "YOURACCESSKEYID"
+
+# Minutes CloudFront request is valid for, consider increasing this if a client has a slow link
+/usr/bin/defaults write com.github.aaronburchfield.cloudfront expire_after -int 30
+
+# Optional: Alternate domain name to generate CloudFront requests for
+# /usr/bin/defaults write com.github.aaronburchfield.cloudfront domain_name -string "munki.megacorp.com"
