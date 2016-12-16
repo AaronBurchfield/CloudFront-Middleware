@@ -40,6 +40,7 @@ CloudFront key pairs are available from the AWS [Security Credentials][2] dashbo
 
 #### Build a luggage package to install CloudFront Middleware
 The included [luggage][7] makefile can be used to create an installer package for CloudFront Middleware.
+
 1. With an AWS Root account generate a CloudFront Key Pair, saving the private key as ```munkiaccess.pem``` in the root of this repo.
 2. Replace the Access Key ID on line 4 of the **postinstall** script with the ID of your CloudFront Key Pair.
 3. ```make pkg``` and install.
