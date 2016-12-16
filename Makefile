@@ -10,6 +10,6 @@ pack-middleware:
 		@sudo ${CP} ./middleware_cloudfront.py ${WORK_D}/usr/local/munki
 		@sudo ${CP} ./munkiaccess.pem ${WORK_D}/usr/local/munki
 		@sudo chown root:wheel ${WORK_D}/usr/local/munki/middleware_cloudfront.py
-		@sudo chmod 755 ${WORK_D}/usr/local/munki/middleware_cloudfront.py
+		@sudo chmod 600 ${WORK_D}/usr/local/munki/middleware_cloudfront.py
 		@sudo chown root:wheel ${WORK_D}/usr/local/munki/munkiaccess.pem
 		@sudo chmod 400 ${WORK_D}/usr/local/munki/munkiaccess.pem
