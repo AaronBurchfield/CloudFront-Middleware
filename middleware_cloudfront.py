@@ -10,6 +10,7 @@ from OpenSSL.crypto import load_privatekey
 from OpenSSL.crypto import sign
 from Foundation import CFPreferencesCopyAppValue
 
+__version__ = '1.0'
 
 BUNDLE = 'com.github.aaronburchfield.cloudfront'
 KEYFILENAME = 'munkiaccess.pem'
