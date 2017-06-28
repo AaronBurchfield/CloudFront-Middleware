@@ -1,7 +1,7 @@
 ### What is CloudFront Middleware?
 CloudFront Middleware enables managed clients to securely access a [munki][0] repo from Amazon's [CloudFront][1] Global Content Delivery Network. CloudFront has lower transit costs than using S3 directly and can offer better performance to managed clients that are outside of an S3 bucket's region.
 
-CloudFront Middleware uses a CloudFront private key to create and sign requests for private CloudFront resources. Each signed request includes an expiration date after which the request is longer valid.
+CloudFront Middleware uses a CloudFront private key to create and sign requests for private CloudFront resources. Each signed request includes an expiration date after which the request is no longer valid.
 
 CloudFront key pairs are available from the AWS [Security Credentials][2] dashboard. Each AWS account can have a maximum of two CloudFront key pairs (active or inactive) at a time, allowing for periodic rotation of the private key. It is possible to grant an AWS account [other than the CloudFront distribution owner][3] the ability to sign CloudFront requests.
 
