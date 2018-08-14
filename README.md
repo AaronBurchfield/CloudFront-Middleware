@@ -46,6 +46,15 @@ The included [luggage][7] makefile can be used to create an installer package fo
 3. ```make pkg``` and install.
 4. Set your ```SoftwareRepoURL``` to your CloudFront Distribution address and run munki.
 
+#### Build a profile to set settings
+An alterative to setting values via `defaults` is to use a profile. As of version 1.1, you can now include the CloudFront certificate and all other settings via a profile. This allows easy rotation of the certificate via alterative delivery methods like Mobile Device Management or a configuration management tool. It is still required to drop the `middleware_cloudfront.py` file on disk into the proper directory.
+
+To create a profile use the `create_profile.py` script. See the help menu `--help` for all options. Example usage can be seen below:
+
+    ```
+    ./create_profile.py --cert ~/Desktop/cloudfront.pem --access_id "XXXXXXX" --org_name "Example Org" --desc "Munki CloudFront Settings"
+    ```
+
 [0]: https://github.com/munki/munki
 [1]: https://aws.amazon.com/cloudfront/
 [2]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html#private-content-creating-cloudfront-key-pairs
