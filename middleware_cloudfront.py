@@ -4,15 +4,17 @@ import os
 import time
 import json
 import base64
+import objc
 from string import maketrans
 from OpenSSL.crypto import FILETYPE_PEM
 from OpenSSL.crypto import load_privatekey
 from OpenSSL.crypto import sign
-from Foundation import CFPreferencesCopyAppValue
+from Foundation import CFPreferencesCopyAppValue, NSData
 
-__version__ = '1.0'
+__version__ = '1.1'
 
 BUNDLE = 'com.github.aaronburchfield.cloudfront'
+CERT_PREFERENCE_NAME = 'cloudfront_certificate'
 KEYFILENAME = 'munkiaccess.pem'
 KEYFILEPATH = os.path.abspath(os.path.join(os.path.dirname(__file__),
                                            KEYFILENAME))
@@ -44,8 +46,15 @@ def assemble_cloudfront_request(resource, key, access_id, expires):
 
 def generate_cloudfront_url(url):
     """Read the required components to build a CloudFront request."""
-    # Read our CloudFront key from file
-    key = load_privatekey(FILETYPE_PEM, open(KEYFILEPATH, 'r').read())
+    # Read our CloudFront key from preference (preferred) or file (fallback)
+    pref_cert = read_preference(CERT_PREFERENCE_NAME, BUNDLE)
+    if pref_cert and isinstance(pref_cert, NSData):
+        key = load_privatekey(FILETYPE_PEM, str(pref_cert))
+    elif pref_cert and isinstance(pref_cert, objc.pyobjc_unicode):
+        # If we have a string type decode the base64 blob
+        key = load_privatekey(FILETYPE_PEM, base64.b64decode(pref_cert))
+    else:
+        key = load_privatekey(FILETYPE_PEM, open(KEYFILEPATH, 'r').read())
     # Read CloudFront access key id and resource expiration from preference
     access_id = read_preference('access_id', BUNDLE)
     expire_after = read_preference('expire_after', BUNDLE) or 60
