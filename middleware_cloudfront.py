@@ -8,7 +8,7 @@ import objc
 from rsa import PrivateKey, sign
 from Foundation import CFPreferencesCopyAppValue, NSData
 
-__version__ = '1.1'
+__version__ = '1.2'
 
 BUNDLE = 'com.github.aaronburchfield.cloudfront'
 CERT_PREFERENCE_NAME = 'cloudfront_certificate'
@@ -37,7 +37,10 @@ def assemble_cloudfront_request(resource, key, access_id, expires):
     # Decode as UTF-8 string
     signature = signature.decode('utf8')
     # Replace unsafe characters
-    signature = signature.translate(str.maketrans('+=/', '-_~'))
+    intab = '+=/'
+    outtab = '-_~'
+    signature = signature.translate({ord(x): ord(y) for (x, y) in zip(intab,
+                                                                      outtab)})
     # Format the final request URL
     cloudfront_request = ("{0}?Expires={1}&Signature={2}&Key-Pair-Id={3}"
                           .format(resource, expires, signature, access_id))
@@ -70,4 +73,3 @@ def process_request_options(options):
     if domain_name in options['url']:
         options['url'] = generate_cloudfront_url(options['url'])
     return options
-
