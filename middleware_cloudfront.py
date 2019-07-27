@@ -5,10 +5,7 @@ import time
 import json
 import base64
 import objc
-from string import maketrans
-from OpenSSL.crypto import FILETYPE_PEM
-from OpenSSL.crypto import load_privatekey
-from OpenSSL.crypto import sign
+from rsa import PrivateKey, sign
 from Foundation import CFPreferencesCopyAppValue, NSData
 
 __version__ = '1.1'
@@ -34,10 +31,13 @@ def assemble_cloudfront_request(resource, key, access_id, expires):
                       {"AWS:EpochTime": expires}}}]
     }
     request_policy = json.dumps(request_policy).replace(' ', '')
+    request_policy = request_policy.encode('utf8')
     # Sign and encode request policy
-    signature = base64.b64encode(sign(key, request_policy, 'RSA-SHA1'))
+    signature = base64.b64encode(sign(request_policy, key, 'SHA-1'))
+    # Decode as UTF-8 string
+    signature = signature.decode('utf8')
     # Replace unsafe characters
-    signature = signature.translate(maketrans('+=/', '-_~'))
+    signature = signature.translate(str.maketrans('+=/', '-_~'))
     # Format the final request URL
     cloudfront_request = ("{0}?Expires={1}&Signature={2}&Key-Pair-Id={3}"
                           .format(resource, expires, signature, access_id))
@@ -49,12 +49,13 @@ def generate_cloudfront_url(url):
     # Read our CloudFront key from preference (preferred) or file (fallback)
     pref_cert = read_preference(CERT_PREFERENCE_NAME, BUNDLE)
     if pref_cert and isinstance(pref_cert, NSData):
-        key = load_privatekey(FILETYPE_PEM, str(pref_cert))
+        key = PrivateKey.load_pkcs1(base64.b64decode(pref_cert))
     elif pref_cert and isinstance(pref_cert, objc.pyobjc_unicode):
         # If we have a string type decode the base64 blob
-        key = load_privatekey(FILETYPE_PEM, base64.b64decode(pref_cert))
+        key = PrivateKey.load_pkcs1(base64.b64decode(pref_cert))
     else:
-        key = load_privatekey(FILETYPE_PEM, open(KEYFILEPATH, 'r').read())
+        cert = open(KEYFILEPATH, 'r').read()
+        key = PrivateKey.load_pkcs1(cert.encode('utf8'))
     # Read CloudFront access key id and resource expiration from preference
     access_id = read_preference('access_id', BUNDLE)
     expire_after = read_preference('expire_after', BUNDLE) or 60
@@ -69,3 +70,4 @@ def process_request_options(options):
     if domain_name in options['url']:
         options['url'] = generate_cloudfront_url(options['url'])
     return options
+
