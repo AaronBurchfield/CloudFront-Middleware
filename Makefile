@@ -1,9 +1,9 @@
 include /usr/local/share/luggage/luggage.make
 TITLE=CloudFrontMiddleware
 REVERSE_DOMAIN=com.github.aaronburchfield.cloudfrontmiddleware
-PACKAGE_VERSION=1.0
-PAYLOAD=pack-middleware\
-	      pack-script-postinstall
+PACKAGE_VERSION=2.0
+PAYLOAD=pack-middleware \
+        pack-script-postinstall
 
 pack-middleware:
 		@sudo mkdir -p ${WORK_D}/usr/local/munki
