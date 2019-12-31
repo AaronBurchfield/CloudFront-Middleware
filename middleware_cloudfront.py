@@ -40,7 +40,7 @@ def read_preference(key, bundle):
 def private_key_from_pref_data(pref_cert):
     """Load private key from NSData."""
     if PYTHONTHREE:
-        private_key = PrivateKey.load_pkcs1(base64.b64decode(pref_cert))
+        private_key = PrivateKey.load_pkcs1(bytes(pref_cert))
     else:
         private_key = load_privatekey(FILETYPE_PEM, str(pref_cert))
 
@@ -108,7 +108,7 @@ def generate_cloudfront_url(url):
         key = private_key_from_pref_data(pref_cert)
     elif pref_cert and isinstance(pref_cert, objc.pyobjc_unicode):
         # If we have a string type decode the base64 blob
-        key = private_key_from_pref(base64.b64decode(pref_cert))
+        key = private_key_from_pref(pref_cert)
     else:
         key = private_key_from_file(KEYFILEPATH)
     # Read CloudFront access key id and resource expiration from preference
