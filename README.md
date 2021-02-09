@@ -6,12 +6,15 @@ CloudFront Middleware uses a CloudFront private key to create and sign requests 
 
 CloudFront private keys are available from the AWS [Security Credentials][2] dashboard. Each AWS root account can have a maximum of two CloudFront private keys (active or inactive) at a time, allowing for periodic rotation of the private key. It is possible to grant an AWS account [other than the CloudFront distribution owner][3] the ability to sign CloudFront requests.
 
+CloudFront now supports [public key management][9] through IAM user permissions for signed URLs and cookies. This is now the preferred method for signing urls as it has various benefits such as [key groups][10], which are sets of multiple public keys which can be created by IAM users based on permissions you grant, and the ability to manage and rotate public keys via CloudFront's api.
+
 ## Requirements
 
 * Customized Munkitools with additional Python modules.
 * [Amazon S3][4] bucket with your munki repo inside.
 * CloudFront distribution serving this origin with [restricted access][5] to your S3 content.
-* CloudFront private key of an AWS account that is a [trusted signer][3] of this CloudFront distribution.
+* CloudFront private key of an AWS account that is a [trusted signer][3] of this CloudFront distribution _OR_
+* CloudFront private key of a [key pair][11], of which the public key is added to CloudFront and associated with a [key group][10] allowed access to this CloudFront distribution
 
 ## Munki 4 and Python 3
 
@@ -96,3 +99,6 @@ To create a profile use the `create_profile.py` script. See the help menu `--hel
 [6]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html
 [7]: https://github.com/unixorn/luggage
 [8]: https://github.com/munki/munki/wiki/About-Munki-4's-Embedded-Python
+[9]: https://aws.amazon.com/about-aws/whats-new/2020/10/cloudfront-iam-signed-url/
+[10]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html#choosing-key-groups-or-AWS-accounts
+[11]: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-trusted-signers.html#private-content-creating-cloudfront-key-pairs
